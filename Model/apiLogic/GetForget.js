@@ -7,9 +7,14 @@ module.exports.CheckToken = async function(id){
     let table_ac = ''
 
     //解密
+    try{
     from_LogicFun.Decryption(id,function(result){
         passToken = result
     })
+    }
+    catch(err){
+        return false
+    }
     let tokenpass_arr = passToken.split('§')
     if(tokenpass_arr.length == 2){
         let acid = tokenpass_arr[0]
@@ -27,6 +32,8 @@ module.exports.CheckToken = async function(id){
           await  from_ACCOUNT.SelectByACID(acid).then(res=>{
               table_ac = res
           })
+        //   console.log(table_ac)
+        //   return false
             if(table_ac.length == 1){
                 return true
             }
@@ -47,7 +54,7 @@ module.exports.CheckPassWord = async function(obj){
     let table_arry = []
     let escpwd = ''
     let table_res = ''
-    from_LogicFun.Decryption(obj.Token,function(result){
+    from_LogicFun.Decryption(obj.newpasswordtoken,function(result){
         passToken = result
     })
     let tokenpass_arr = passToken.split('§')
@@ -60,7 +67,7 @@ module.exports.CheckPassWord = async function(obj){
             todaytime = res
         })
         if(tokentime == todaytime){
-            from_LogicFun.Encryption(obj.pwd,function(pwdresult){
+            from_LogicFun.Encryption(obj.newpwd,function(pwdresult){
                 escpwd = pwdresult
             })
             table_arry.push(escpwd)

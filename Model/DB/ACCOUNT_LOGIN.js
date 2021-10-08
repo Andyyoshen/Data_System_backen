@@ -23,3 +23,9 @@ module.exports.Insert_ACCOUNT_LOGIN2 = function(obj,callback){
          callback(result)
      })
 }
+
+module.exports.Insert_ACCOUNT_LOGIN3 = async function(obj){
+    var cmd = "INSERT INTO ACCOUNT_LOGIN SET ?"
+   let Insert_ACCOUNT_LOGIN3 =  con.Example3(cmd,obj)
+   return Insert_ACCOUNT_LOGIN3
+}

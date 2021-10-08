@@ -47,7 +47,32 @@ module.exports.IsVerifyDate = function (Token, callback) {
         }
     })
 }
-//[驗證TokenID是否正確] 權限未完成!
+//[透過TokenID來獲取AC_ID]
+module.exports.GetACID = async function(id){
+    let decry_string = ""
+    let tt = ""
+    if (id != undefined) {
+        const Decryption_result = await AC.Decryption(id)
+            decry_string = Decryption_result
+            decry_string = decry_string.split('§')
+            if (decry_string.length != 2) {
+                return false
+            }
+            else {
+               const SelectByACID_result = await from_ACCOUNT.Select_Account_Some_Info_ByACID(decry_string[0])
+               if(SelectByACID_result.length!=0){
+                   return SelectByACID_result
+               }
+               else{
+                   return false
+               }
+            }
+    }
+    else {
+        return false
+    }
+}
+//[驗證TokenID是否正確] 
 module.exports.IsVerifyId = async function (id) {
     let decry_string = ""
     let tt = ""
@@ -60,8 +85,11 @@ module.exports.IsVerifyId = async function (id) {
             }
             else {
                const SelectByAC_IDAC_PWD_result = await from_ACCOUNT.SelectByAC_IDAC_PWD(decry_string)
+               //console.log(SelectByAC_ID_Join_result[4])
                if(SelectByAC_IDAC_PWD_result.length!=0){
-                   return true
+                   const SelectByAC_ID_Join_result = await from_ACCOUNT.SelectByAC_ID_Join(decry_string[0])
+                   
+                   return SelectByAC_ID_Join_result[0]
                }
                else{
                    return false

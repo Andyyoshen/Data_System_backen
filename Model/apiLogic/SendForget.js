@@ -10,7 +10,6 @@ module.exports.CheckForget = async function(obj){
     let emailmsg = ''
     //arry_AC.push(AC_USER,AC_EMAIL)
    let SelectByForget_result = await from_ACCOUNT.SelectByForget(arry_AC)
-    
     if(SelectByForget_result.length>0){
         // 寄件函式
     let SendEmail_result =  await  this.SendEmail(SelectByForget_result)
@@ -33,9 +32,12 @@ module.exports.SendEmail = async function(SelectByForget_result){
     from_LogicFun.Encryption(id,function(ency_result){
         token = ency_result
     })
-    let strbody =  "親愛的" + name + "先生/小姐 你好"+
-                   "修改密碼需再" + today +"日內完成"+
-                   "修改密輪" + token
+    let strbody =  '<p>親愛的' + name + '先生/小姐 你好</p>'+
+                   '<p>要重設帳戶密碼，請使用以下連結並按步驟操作。</p>'+
+                   '<a href="http://localhost:8080/#/ForgetPassword">重設密碼</a>'+
+                   '<p>注意!! 修改密碼需再'+  today +"日內完成"+'</p>'+
+                   '<p>郵件驗證碼' + token+'</p>' 
+   // let strbody = '<a href="#">abc</a>'
     await from_MailFun.SendMailModel(strbody).then(result=>{
         if(result){
             msg = true

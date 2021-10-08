@@ -26,6 +26,18 @@ module.exports.Select = async  function(){
     return dataList
 
 }
+//[撈會員最後一筆新資料]
+module.exports.SelectNewaccountData = async function(){
+    cmd = `SELECT AC_ID FROM account ORDER BY AC_ID DESC LIMIT 1`
+    let SelectNewData_result = con.Example3(cmd,null)
+    return SelectNewData_result
+}
+//[插入會員的權線]
+module.exports.InsertAccountInfoStatus = async function(data){
+    cmd = `INSERT INTO account_info SET ? `
+    let InsertAccountInfoStatus_result = con.Example3(cmd,data)
+    return InsertAccountInfoStatus_result
+}
 //[插入會員]
 module.exports.Insert = async function(Register_obj_data){
     LF.Encryption(Register_obj_data.AC_PWD,function(encrypt_Result){

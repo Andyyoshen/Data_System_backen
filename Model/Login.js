@@ -43,6 +43,7 @@ module.exports.CheckPass = function(obj,callback){
             }
              from_ACCOUNT_LOGIN.Insert_ACCOUNT_LOGIN2(ALobj,
                  function(result){}) //新增登入紀錄
+                 console.log(result[0])
              callback(Total_Encrtpt)
         }
         else{

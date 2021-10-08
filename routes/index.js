@@ -12,6 +12,10 @@ var from_SendForget = require('../Model/apiLogic/SendForget')
 var from_GetForget = require('../Model/apiLogic/GetForget')
 var from_ImgaeCode = require('../Model/General/ImageCode')
 var from_ImageOut = require('../Model/apiLogic/ImageOut')
+var from_GetView = require('../Model/apiLogic/GetView')
+var from_GetAuthority = require('../Model/apiLogic/GetAuthority')
+var from_GetRegister = require('../Model/apiLogic/GetRegister')
+
 app.use(bodyParser.json())
 /* GET home page. */
 
@@ -78,10 +82,232 @@ router.post('/checkimagecodepass', function (req, res, next) {
   })
   // console.log(passImagecode)
 })
+//[觀看柴權圖片(權線)]
+router.post('/DogViewCard',async function(req,res,next){
+  lf.IsVerifyDate(req.body.Token_data.Token,async function(callback_Token){
+    if(callback_Token == true){
+      try{
+        // IsVerifyId_result 撈使用者權限
+        let IsVerifyId_result = await lf.IsVerifyId(req.body.Token_data.TokenID)
+
+        // 把資料庫的權限表丟到Authority_Judgment_result 
+        let Authority_Judgment_result = await from_GetAuthority.Authority_Judgment(req.body.U_data,IsVerifyId_result)
+        
+        if(Authority_Judgment_result == true){
+          let ViewPicture_result = await from_GetView.ViewPicture(req.body.U_data)
+          {
+            res.send({
+            Status:true,
+            Data:ViewPicture_result,
+            Msg:"sucess"
+            })
+          }
+        }
+        else{
+          res.send({
+            Status:false,
+            Data:'權線不足',
+            Msg:"fail"
+          })
+        }
+       
+      }
+      catch(err){
+        console.log(err)
+        res.send({
+          Status:505,
+          Data:'',
+          Msg:"fail"
+        })
+      }
+    }
+  })
+})
+//[觀看內容(權線)]
+router.post('/ViewCard',async function(req,res,next){
+  
+  lf.IsVerifyDate(req.body.Token_data.Token,async function(callback_Token){
+    if(callback_Token == true){
+      try{
+        let IsVerifyId_result = await lf.IsVerifyId(req.body.Token_data.TokenID)
+        if(IsVerifyId_result.AI_Status == 'admin'){
+          res.send({
+            Status:true,
+            Data:'/TaiwanMap',
+            Msg:"sucess"
+          })
+        }
+        else{
+          res.send({
+            Status:false,
+            Data:'無效驗證',
+            Msg:"fail"
+          })
+        }
+       
+        }
+      catch(err){
+        console.log(err)
+      }
+      
+    }
+ })
+})
+//[依TokenID查詢使用者資料]
+router.post('/GetAccountInfo',function(req,res,next){
+  lf.IsVerifyDate(req.body.Token_data.Token,async function(callback_Token){
+    if(callback_Token == true){  
+      try{
+        var GetACID_result =  await lf.GetACID(req.body.Token_data.TokenID)
+        if(GetACID_result != false){
+          res.send({
+            Status: true,
+            Data: GetACID_result,
+            Msg: "sucess"
+          })
+        }
+        else{
+          res.send({
+            Status: false,
+            Msg: "fail"
+          })
+        }
+      }
+      catch(err){
+        console.log(err)
+      }
+      
+    }
+  })
+})
+//[依AC_USERNAME查詢帳號]
+router.post('/CheckAccountUserName', function (req, res, next){
+  console.log(req.body.U_data)
+  lf.IsVerifyDate(req.body.Token_data.Token,async function(callback_Token){
+    if(callback_Token == true){
+      try{
+      let SelectByUserNAME_result = await from_ACCOUNT.SelectByUserNAME(req.body.U_data)
+      console.log(SelectByUserNAME_result)
+      if(SelectByUserNAME_result.length==0)
+      {
+        res.send({
+          Status:true,
+          Data:"sucess",
+          Msg:"sucess"
+        })
+      }
+      else{
+        res.send({
+          Status:true,
+          Data:"fail",
+          Msg:"sucess"
+        })
+      }
+    }
+    catch(err){
+      res.send({
+        Status:false,
+        Data:"",
+        Msg:"fail"
+      })
+    }  
+    }
+    else{
+      res.send({
+        msg: "過期",
+        list: req.body.Token
+      })
+    }
+    
+  })
+})
+
+//[依AC_USER查詢帳號]
+router.post('/SearchAccount', function (req, res, next){
+  console.log(req.body.U_data)
+  lf.IsVerifyDate(req.body.Token_data.Token,async function(callback_Token){
+    if(callback_Token == true){
+      try{
+      let SelectByUserID_result = await from_ACCOUNT.SelectByUserID(req.body.U_data)
+      console.log(SelectByUserID_result)
+      if(SelectByUserID_result.length==0)
+      {
+        res.send({
+          Status:true,
+          Data:"sucess",
+          Msg:"sucess"
+        })
+      }
+      else{
+        res.send({
+          Status:true,
+          Data:"fail",
+          Msg:"sucess"
+        })
+      }
+    }
+    catch(err){
+      res.send({
+        Status:false,
+        Data:"",
+        Msg:"fail"
+      })
+    }  
+    }
+    else{
+      res.send({
+        msg: "過期",
+        list: req.body.Token
+      })
+    }
+    
+  })
+})
+//[依AC_EMAIL查詢帳號]
+router.post('/CheckAccountEmail', function (req, res, next){
+  console.log(req.body.U_data)
+  lf.IsVerifyDate(req.body.Token_data.Token,async function(callback_Token){
+    if(callback_Token == true){
+      try{ 
+      let SelectByUserEMAIL_result = await from_ACCOUNT.SelectByUserEMAIL(req.body.U_data)
+      console.log(SelectByUserEMAIL_result)
+      if(SelectByUserEMAIL_result.length==0)
+      {
+        res.send({
+          Status:true,
+          Data:"sucess",
+          Msg:"sucess"
+        })
+      }
+      else{
+        res.send({
+          Status:true,
+          Data:"fail",
+          Msg:"sucess"
+        })
+      }
+    }
+    catch(err){
+      res.send({
+        Status:false,
+        Data:"",
+        Msg:"fail"
+      })
+    }  
+    }
+    else{
+      res.send({
+        msg: "過期",
+        list: req.body.Token
+      })
+    }
+    
+  })
+})
 //[查詢帳號]
 router.post('/SelectUser', function (req, res, next) {
   lf.IsVerifyDate(req.body.Token_data.Token, async function (callback_Token) {
-    if (callback_Token == true) {
+    if (callback_Token == true) { 
       console.log(req.body)
       let IsVerifyId_result = await lf.IsVerifyId(req.body.Token_data.TokenID)
       // console.log(IsVerifyId_result)
@@ -127,25 +353,40 @@ router.post('/SelectUser', function (req, res, next) {
 router.post('/Register',  function (req, res, next) {
   lf.IsVerifyDate(req.body.Token_data.Token, async function (callback) {
     if (callback == true) {
-     let Insert_result =  await ac.Insert(req.body.U_data)
-     try{
-      if(Insert_result.length!=0){
-        res.send({
-          Status:true,
-          Data:'',
-          Msg:"sucess"
-        })
-      }
+      try{
+          let Insert_result =  await ac.Insert(req.body.U_data)
+          if(Insert_result.length!=0){
+            
+              let SelectNewaccountData_result = await ac.SelectNewaccountData() //撈最新註冊的AC_ID
+
+              InfoStatusData ={
+                  AI_ACID:SelectNewaccountData_result[0].AC_ID,
+                  AI_Status : 'copper' //copper銅
+              
+                }
+                // Insertaccinfo_result 插入初始權線
+              let Insertaccinfo_result = await ac.InsertAccountInfoStatus(InfoStatusData)
+              
+                // 取得註冊會員資料
+              let RegisterLogin_result = await  from_GetRegister.RegisterLogin(req.body.U_data)
+
+              res.send({
+                Status:true,
+                Data:RegisterLogin_result,
+                Msg:"sucess"
+              })
+          }
+     
+    
      }
      catch(err){
        console.log(err)
+       res.send({
+        Status:false,
+        Data:'',
+        Msg:"fail"
+       })
      }
-      // ac.Insert(req.body.AC_PWD, req.body.AC_USER, req.body.AC_USERNAME, req.body.AC_EMAIL, function (result) {
-      //   res.status(201).send({
-      //     msg: "成功",
-      //     list: req.body
-      //   })
-      // })
     }
     else {
       res.status(201).send({
@@ -229,45 +470,56 @@ router.post('/SendForget', function (req, res, next) {
 })
 //[檢核忘記密碼]
 router.post('/GetForget', function (req, res, next) {
-  switch (req.body.TYPE) {
-    //[驗證token]
-    case "check":
-      from_GetForget.CheckToken(req.body.Token).then(rs => {
-        if (rs == true) {
-          res.status(201).send({
-            mas: "sucess",
-            list: true
-          })
-        }
-        else {
-          res.status(400).send({
-            mas: "fail",
-            list: false
-          })
-        }
-      })
-      break
-    //[驗正修改密碼]    
-    case "change":
-      from_GetForget.CheckPassWord(req.body).then(rs => {
-        if (rs == true) {
-          res.status(201).send({
-            mas: "sucess",
-            list: true
-          })
-        }
-        else {
-          res.status(400).send({
-            mas: "fail",
-            list: false
-          })
-        }
-      })
-      break
-    default:
-      console.log("TYPE錯誤")
-      break
-  }
+
+    switch (req.body.TYPE) {
+      //[驗證token]
+
+      case "check":
+
+        from_GetForget.CheckToken(req.body.code).then(rs => {
+          if (rs == true) {
+            res.send({
+              Status: true,
+              Data: "",
+              Msg: "sucess"
+            })
+          }
+          else {
+            res.send({
+                    Status: false,
+                    Msg: "fail"
+                  })
+          }
+        })
+
+        break;
+      
+ 
+      //[驗正修改密碼]    
+      case "change":
+        from_GetForget.CheckPassWord(req.body).then(rs => {
+          if (rs == true) {
+            res.send({
+              Status: true,
+              Data: "",
+              Msg: "sucess"
+            })
+          }
+          else {
+            res.send({
+              Status: false,
+              Msg: "fail"
+            })
+          }
+        })
+        console.log("大家好")
+        break
+      default:
+        console.log("TYPE錯誤")
+        break
+      }
+
+
 })
 //[驗證API是否過期]
 router.post('/IsVerifyDateTest', function (req, res, next) {
@@ -281,13 +533,21 @@ router.post('/IsVerifyDateTest', function (req, res, next) {
   })
 })
 //[解密]
-router.post('/DecryptionTest', function (req, res, next) {
-  lf.Decryption(req.body.Token, function (callback) {
-    res.status(201).send({
-      mas: "sucess",
-      list: callback
+router.post('/DecryptionTest', function (error,req, res, next) {
+  try{
+    lf.Decryption(req.body.Token, function (callback) {
+      res.status(201).send({
+        mas: "sucess",
+        list: callback
+      })
     })
-  })
+  }
+  catch(err){
+    res.send({
+      mas: "fail",
+    })
+  }
+  
 })
 //[取得今天日期並加密]
 router.post('/CryptionTest', function (req, res, next) {
