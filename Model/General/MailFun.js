@@ -12,7 +12,7 @@ module.exports.SendMailModel = async function(strbody){
     var options = {
         from:'chsummerpower@gmail.com',
         
-        to:'wwee123096@gmail.com',
+        to:'wwee123096@gmail.com', // 暫時
         
         subject:'測式',
 

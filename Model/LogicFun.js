@@ -72,7 +72,7 @@ module.exports.GetACID = async function(id){
         return false
     }
 }
-//[驗證TokenID是否正確] 
+//[驗證TokenID是否符合權線] 
 module.exports.IsVerifyId = async function (id) {
     let decry_string = ""
     let tt = ""

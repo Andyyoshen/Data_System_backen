@@ -20,7 +20,11 @@ app.use(bodyParser.json())
 /* GET home page. */
 
 router.get('/dbtest', function (req, res, next) {
-  console.log("一")
+  res.status(201).send({
+    Status: true,
+    Data: "hellow",
+    Msg: "sucess"
+  })
   //ac.Select(function(result){
   // res.render('index',{ title: JSON.stringify(result[3]) })
   // res.send({
@@ -89,12 +93,12 @@ router.post('/DogViewCard',async function(req,res,next){
       try{
         // IsVerifyId_result 撈使用者權限
         let IsVerifyId_result = await lf.IsVerifyId(req.body.Token_data.TokenID)
-
-        // 把資料庫的權限表丟到Authority_Judgment_result 
+        
+        // 把資料庫的權限表丟到Authority_Judgment_result 注意!! 這裡只是判斷權線
         let Authority_Judgment_result = await from_GetAuthority.Authority_Judgment(req.body.U_data,IsVerifyId_result)
         
         if(Authority_Judgment_result == true){
-          let ViewPicture_result = await from_GetView.ViewPicture(req.body.U_data)
+          let ViewPicture_result = await from_GetView.ViewPicture(req.body.U_data,IsVerifyId_result)
           {
             res.send({
             Status:true,
