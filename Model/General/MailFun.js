@@ -1,7 +1,7 @@
 const { text } = require('express');
 var nodemailer = require('nodemailer')
 //[寄信模組]
-module.exports.SendMailModel = async function(strbody){
+module.exports.SendMailModel = async function(strbody,email){
     var transporter = nodemailer.createTransport({
         service:'Gmail',
         auth:{
@@ -12,7 +12,7 @@ module.exports.SendMailModel = async function(strbody){
     var options = {
         from:'chsummerpower@gmail.com',
         
-        to:'wwee123096@gmail.com', // 暫時
+        to:email, // 資料庫裡的eamil
         
         subject:'測式',
 

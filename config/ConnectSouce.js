@@ -20,21 +20,28 @@ var address = require('../config/db')
 var connection = mysql.createConnection(address);
 //查詢
 module.exports.Example =  function (sql) { 
-
-     return new Promise(function(resolve,reject){
-        connection.query(sql, function (err, rows, fields) {
-            if (err) {
-                //console.log("錯誤"+err);
-                reject(err)
-                
-                //callback(err, null);
-            }
-            else{
-                resolve(rows)
-            }
-
-        });
-     })
+    try{
+        return new Promise(function(resolve,reject){
+            connection.query(sql, function (err, rows, fields) {
+                if (err) {
+                    //console.log("錯誤");
+                    console.log(err)
+                    reject(err)
+                    
+                    //callback(err, null);
+                }
+                else{
+                    resolve(rows)
+                }
+    
+            });
+         })
+    }
+    catch(err){
+       
+        return "你好"
+    }
+     
     // connection.query(sql, function (err, rows, fields) {
     //     if (err) {
     //         console.log("錯誤"+err);

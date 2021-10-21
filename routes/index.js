@@ -19,12 +19,12 @@ var from_GetRegister = require('../Model/apiLogic/GetRegister')
 app.use(bodyParser.json())
 /* GET home page. */
 
-router.get('/dbtest', function (req, res, next) {
-  res.status(201).send({
-    Status: true,
-    Data: "hellow",
-    Msg: "sucess"
-  })
+router.get('/rdstest', function (req, res, next) {
+  // res.status(201).send({
+  //   Status: true,
+  //   Data: "hellow",
+  //   Msg: "sucess"
+  // })
   //ac.Select(function(result){
   // res.render('index',{ title: JSON.stringify(result[3]) })
   // res.send({
@@ -36,9 +36,22 @@ router.get('/dbtest', function (req, res, next) {
   // ac.Select().then(r=>{
   //   console.log(r)
   // })
-  ac.Select().then(result => {
-    console.log(result)
-  })
+  try{
+    ac.Select().then(result => {
+      console.log("adsasdasd")
+      console.log(result)
+      res.status(201).send({
+        Status: true,
+        Data: result,
+        Msg: "sucess"
+      })
+      
+    })
+  }
+  catch(err){
+    console.log("大家好")
+  }
+  
   // console.log(rr)
 
 });

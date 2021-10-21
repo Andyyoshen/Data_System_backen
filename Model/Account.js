@@ -20,10 +20,22 @@ module.exports.Select = async  function(){
     //     })
     // })
     //------------------------------------------------
-
-    let dataList = await con.Example(cmd)
+    try{
+        let dataList = await con.Example(cmd)
+        return dataList
+    }
+    catch(err){
+        console.log("證確")
+        return "失敗資料庫異常"
+    }
+    // let dataList = await con.Example(cmd).catch(err=>{
+    //     console.log("證確")
+    //     console.log(err)
+    // })
+    
+    //console.log(dataList)
    //console.log(dataList)
-    return dataList
+    //return dataList
 
 }
 //[撈會員最後一筆新資料]

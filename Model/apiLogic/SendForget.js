@@ -29,6 +29,7 @@ module.exports.SendEmail = async function(SelectByForget_result){
     })
     let id = SelectByForget_result[0].AC_ID+"§"+today //未加密Tokn
     let name = SelectByForget_result[0].AC_USERNAME
+    let email = SelectByForget_result[0].AC_EMAIL
     from_LogicFun.Encryption(id,function(ency_result){
         token = ency_result
     })
@@ -38,7 +39,7 @@ module.exports.SendEmail = async function(SelectByForget_result){
                    '<p>注意!! 修改密碼需再'+  today +"日內完成"+'</p>'+
                    '<p>郵件驗證碼' + token+'</p>' 
    // let strbody = '<a href="#">abc</a>'
-    await from_MailFun.SendMailModel(strbody).then(result=>{
+    await from_MailFun.SendMailModel(strbody,email).then(result=>{
         if(result){
             msg = true
         } 

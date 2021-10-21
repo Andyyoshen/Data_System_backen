@@ -6,7 +6,6 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var session = require('express-session') //要注意路徑
@@ -17,12 +16,15 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+// ----- 測試中暫時關閉
 var  MySqlOptions = {
       host: 'localhost',          //地址
       user: 'root',               //使用者名稱
       password: '123456',        //密碼
       database: 'session_test',    //資料庫     
   }
+//------------------
+// ----- 測試中暫時關閉
 app.use(session({
   name: 'key',
   secret: 'chyingp',  // 用来对session id相关的cookie进行签名
@@ -33,6 +35,7 @@ app.use(session({
       maxAge: 1000 * 1000 // 有效期，单位是毫秒
   }
 }))
+//-------
 //console.log(session())
 //========================================================================
 app.post('/test2', function(req, res, next) {
@@ -42,7 +45,11 @@ app.post('/test2', function(req, res, next) {
 });
 app.use(bodyParser.json())
 app.get('/test4',function(req,res,next){
-  res.send("ddd222");
+  res.status(201).send({
+    Status: true,
+    Data: "dddd",
+    Msg: "sucess"
+  })
 });
 app.post('/test5', function (req, res) {
   //console.log("主页 POST 请求");
